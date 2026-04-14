@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" shape-rendering="geometricPrecision">
+  <defs>
+
+    <!-- Radial gradient: light centre → deep edge, matching the chalk-blue look -->
+    <radialGradient id="cloudGrad" cx="42%" cy="36%" r="68%" gradientUnits="userSpaceOnUse">
+      <stop offset="0%"   stop-color="#a8d4ff"/>
+      <stop offset="30%"  stop-color="#5599f7"/>
+      <stop offset="65%"  stop-color="#3a74e8"/>
+      <stop offset="100%" stop-color="#2758c8"/>
+    </radialGradient>
+
+    <!-- Clip path that defines the cloud silhouette once -->
+    <clipPath id="cloudClip">
+      <circle cx="33" cy="31" r="21"/>
+      <circle cx="67" cy="31" r="21"/>
+      <circle cx="20" cy="54" r="18"/>
+      <circle cx="80" cy="54" r="18"/>
+      <circle cx="34" cy="72" r="19"/>
+      <circle cx="66" cy="72" r="19"/>
+      <circle cx="50" cy="50" r="26"/>
+    </clipPath>
+
+    <!-- Fuzzy / chalky soft-edge texture on the whole cloud -->
+    <filter id="fuzzyEdge" x="-8%" y="-8%" width="116%" height="116%" color-interpolation-filters="sRGB">
+      <!-- Fractal noise that erodes the outer rim -->
+      <feTurbulence type="fractalNoise" baseFrequency="0.72" numOctaves="4" seed="8" result="noise"/>
+      <feColorMatrix in="noise" type="matrix"
+        values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 22 -10"
+        result="noiseMask"/>
+      <!-- Cut the graphic only where noise lets it through → fuzzy silhouette -->
+      <feComposite in="SourceGraphic" in2="noiseMask" operator="in" result="noised"/>
+      <!-- Light Gaussian softens the jagged noise edges -->
+      <feGaussianBlur stdDeviation="0.7" in="noised" result="softNoised"/>
+      <!-- Layer: soft noised version under sharper center -->
+      <feMerge>
+        <feMergeNode in="softNoised"/>
+      </feMerge>
+    </filter>
+
+    <!-- Chalk / pastel highlight spots layered on top -->
+    <filter id="chalkHighlight" x="-5%" y="-5%" width="110%" height="110%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" seed="3" result="cNoise"/>
+      <feColorMatrix in="cNoise" type="matrix"
+        values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 14 -9"
+        result="cMask"/>
+      <feFlood flood-color="white" flood-opacity="0.55" result="white"/>
+      <feComposite in="white" in2="cMask" operator="in" result="spots"/>
+      <feComposite in="spots"  in2="SourceGraphic" operator="in" result="clippedSpots"/>
+      <feMerge>
+        <feMergeNode in="SourceGraphic"/>
+        <feMergeNode in="clippedSpots"/>
+      </feMerge>
+    </filter>
+
+    <!-- White outer-glow for the eyes and smile so they read on dark tabs -->
+    <filter id="whiteGlow" x="-120%" y="-120%" width="340%" height="340%" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="1.1" result="gb"/>
+      <feFlood flood-color="white" flood-opacity="1" result="white"/>
+      <feComposite in="white" in2="gb" operator="in" result="glow"/>
+      <feMerge>
+        <feMergeNode in="glow"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+  </defs>
+
+  <!-- ── LAYER 1: base cloud body with fuzzy edge erosion ── -->
+  <g filter="url(#fuzzyEdge)">
+    <g fill="url(#cloudGrad)">
+      <circle cx="33" cy="31" r="21"/>
+      <circle cx="67" cy="31" r="21"/>
+      <circle cx="20" cy="54" r="18"/>
+      <circle cx="80" cy="54" r="18"/>
+      <circle cx="34" cy="72" r="19"/>
+      <circle cx="66" cy="72" r="19"/>
+      <circle cx="50" cy="50" r="26"/>
+    </g>
+  </g>
+
+  <!-- ── LAYER 2: chalk white-spot texture (clipped to cloud) ── -->
+  <g clip-path="url(#cloudClip)" filter="url(#chalkHighlight)" opacity="0.9">
+    <rect x="12" y="12" width="76" height="76" fill="url(#cloudGrad)"/>
+  </g>
+
+  <!-- ── Pink cheek blushes ── -->
+  <ellipse cx="30" cy="57" rx="11.5" ry="10"  fill="#e882bc" opacity="0.72" clip-path="url(#cloudClip)"/>
+  <ellipse cx="70" cy="57" rx="11.5" ry="10"  fill="#e882bc" opacity="0.72" clip-path="url(#cloudClip)"/>
+
+  <!-- ── Eyes – black dots with white glow ── -->
+  <g filter="url(#whiteGlow)">
+    <circle cx="42"  cy="47" r="2.6" fill="#111111"/>
+    <circle cx="58"  cy="47" r="2.6" fill="#111111"/>
+  </g>
+
+  <!-- ── Smile – arc with white glow ── -->
+  <path d="M 43 56 Q 50.5 63.5 58 56"
+        stroke="#111111" stroke-width="2.4" fill="none"
+        stroke-linecap="round"
+        filter="url(#whiteGlow)"/>
+
+</svg>

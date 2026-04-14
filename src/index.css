@@ -1,0 +1,91 @@
+@import url('https://fonts.googleapis.com/css2?family=Barrio&family=Goblin+One&family=DM+Sans:wght@300;400;500&family=Rozha+One&family=Tiro+Devanagari+Sanskrit&family=Manrope:wght@300;400;500&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-background: #1A0005;
+  --color-on-background: #FFFFFF;
+  --color-surface: #1A0005;
+  --color-surface-container-low: #220006;
+  --color-surface-container-high: #2D0006;
+  --color-on-surface: #FFFFFF;
+  --color-on-surface-variant: #e5e5e5;
+  --color-accent: #800000;
+  
+  --font-headline: "Goblin One", serif;
+  --font-body: "DM Sans", sans-serif;
+  --font-brand: "Tiro Devanagari Sanskrit", serif;
+  --font-logo: "Rozha One", serif;
+  --font-manrope: "Manrope", sans-serif;
+  --font-barrio: "Barrio", system-ui;
+}
+
+@layer base {
+  body {
+    @apply bg-background text-on-background font-body overflow-x-hidden;
+  }
+}
+
+@layer utilities {
+  .bracket-expand:hover .bracket-left { transform: translateX(-8px); }
+  .bracket-expand:hover .bracket-right { transform: translateX(8px); }
+  
+  .glass-nav {
+    backdrop-filter: blur(20px);
+    background-color: rgba(13, 13, 18, 0.8);
+  }
+  
+  .project-marquee {
+    font-size: clamp(4rem, 11vw, 12rem);
+    line-height: 0.8;
+  }
+
+  .massive-footer-text {
+    font-size: clamp(150px, 15vw, 180px);
+  }
+
+  @keyframes warli-walk {
+    0%, 100% { transform: translateY(0) rotate(-2deg); }
+    50% { transform: translateY(-4px) rotate(2deg); }
+  }
+
+  .animate-warli-walk {
+    animation: warli-walk 1.5s ease-in-out infinite;
+  }
+
+  @keyframes spin-slow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  @keyframes pulse-soft {
+    0%, 100% { opacity: 0.4; transform: scale(0.95); }
+    50% { opacity: 1; transform: scale(1.05); }
+  }
+
+  .animate-spin-slow {
+    animation: spin-slow 12s linear infinite;
+  }
+
+  .animate-pulse-soft {
+    animation: pulse-soft 3s ease-in-out infinite;
+  }
+
+  .cursor-glow {
+    box-shadow: 0 0 15px 2px rgba(128, 0, 0, 0.6);
+  }
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: marquee 36s linear infinite;
+  display: flex;
+  width: max-content;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
