@@ -941,6 +941,7 @@ const Footer = ({ time }: { time: string }) => {
 const Portfolio = ({ onContactClick }: { onContactClick: () => void }) => {
   const [time, setTime] = useState('');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const cvPath = '/Manan_Resume.pdf';
 
   useEffect(() => {
     const updateTime = () => {
@@ -965,6 +966,24 @@ const Portfolio = ({ onContactClick }: { onContactClick: () => void }) => {
     }, 300);
     return () => clearTimeout(timer);
   }, []);
+
+  const handleCvClick = async (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+
+    try {
+      const response = await fetch(cvPath, { method: 'HEAD' });
+      const contentType = response.headers.get('content-type') || '';
+
+      if (response.ok && contentType.includes('pdf')) {
+        window.open(cvPath, '_blank', 'noopener,noreferrer');
+        return;
+      }
+    } catch {
+      // Ignore and show a friendly message below.
+    }
+
+    window.alert('CV file not found. Please add Manan_Resume.pdf in the public folder.');
+  };
 
   return (
     <div className="relative">
@@ -1119,13 +1138,15 @@ const Portfolio = ({ onContactClick }: { onContactClick: () => void }) => {
           </a>
           
           <a 
-            href="/resume.pdf"
+            href={cvPath}
             target="_blank"
+            rel="noopener noreferrer"
+            onClick={handleCvClick}
             className="bracket-expand group flex items-center gap-4 px-12 py-6 border border-transparent hover:bg-white/5 transition-all duration-500 cursor-pointer"
           >
             <span className="bracket-left text-3xl font-light transition-transform">[</span>
             <span className="text-lg md:text-2xl tracking-[0.4em] font-medium uppercase">
-              DOWNLOAD CV ↓
+              VIEW CV ↗
             </span>
             <span className="bracket-right text-3xl font-light transition-transform">]</span>
           </a>
